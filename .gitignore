@@ -1,0 +1,8 @@
+.idea
+.vscode
+*/.DS_Store
+main.exe
+wangStoreServer.exe
+
+# go sum
+go.sum
