@@ -10,7 +10,6 @@ require (
 	github.com/golang-jwt/jwt/v4 v4.4.2
 	github.com/spf13/viper v1.13.0
 	golang.org/x/crypto v0.0.0-20220411220226-7b82a4e95df4
-	gopkg.in/yaml.v2 v2.4.0
 	gorm.io/driver/mysql v1.3.6
 	gorm.io/gorm v1.23.8
 )
@@ -43,5 +42,6 @@ require (
 	golang.org/x/text v0.3.7 // indirect
 	google.golang.org/protobuf v1.28.0 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
+	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
