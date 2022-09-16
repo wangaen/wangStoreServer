@@ -2,9 +2,12 @@ package utils
 
 import (
 	"fmt"
+	"math/rand"
 	"reflect"
+	"time"
 )
 
+// 结构体转map
 func StructToMap(obj interface{}) (map[string]interface{}, bool) {
 	//	判断是否是结构体类型
 	t := reflect.TypeOf(obj)
@@ -23,8 +26,11 @@ func StructToMap(obj interface{}) (map[string]interface{}, bool) {
 			mapObj[field.Tag.Get("json")] = value
 		}
 	}
-	fmt.Println(111)
-	//fmt.Printf("%#v", mapObj)
-	fmt.Println(222)
 	return mapObj, true
+}
+
+// GetRandomNum 生成随机数
+func GetRandomNum(max int) int {
+	rand.Seed(time.Now().UnixNano())
+	return rand.Intn(max)
 }
