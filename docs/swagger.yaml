@@ -1,0 +1,215 @@
+definitions:
+  controller.AdminInfoController:
+    properties:
+      avatar:
+        type: string
+      createBy:
+        type: integer
+      createdAt:
+        type: string
+      deptId:
+        type: integer
+      email:
+        type: string
+      nickName:
+        type: string
+      phone:
+        type: string
+      postId:
+        type: integer
+      remark:
+        type: string
+      roleId:
+        type: integer
+      sex:
+        type: integer
+      status:
+        type: string
+      updateBy:
+        type: integer
+      updatedAt:
+        type: string
+      userId:
+        type: integer
+      username:
+        type: string
+    type: object
+  form.LoginForm:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+info:
+  contact: {}
+paths:
+  /admin/login:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: body
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/form.LoginForm'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.AdminInfoController'
+        "500":
+          description: error
+          schema:
+            type: string
+      summary: admin 登录
+      tags:
+      - 登录注册
+  /admin/register:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: body
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/form.LoginForm'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.AdminInfoController'
+        "500":
+          description: error
+          schema:
+            type: string
+      summary: admin 注册
+      tags:
+      - 登录注册
+  /admin/user/{userId}:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: userId
+        in: path
+        name: userId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 删除成功
+          schema:
+            type: string
+        "500":
+          description: error
+          schema:
+            type: string
+      summary: 删除admin用户
+      tags:
+      - admin 用户信息
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: userId
+        in: path
+        name: userId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.AdminInfoController'
+        "500":
+          description: error
+          schema:
+            type: string
+      summary: 获取admin用户信息
+      tags:
+      - admin 用户信息
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: userId
+        in: path
+        name: userId
+        required: true
+        type: integer
+      - description: body
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/controller.AdminInfoController'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.AdminInfoController'
+        "500":
+          description: error
+          schema:
+            type: string
+      summary: 修改admin用户信息
+      tags:
+      - admin 用户信息
+  /admin/user/list:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: pageIndex
+        in: query
+        name: pageIndex
+        type: integer
+      - description: pageSize
+        in: query
+        name: pageSize
+        type: integer
+      - description: username
+        in: query
+        name: username
+        type: string
+      - description: phone
+        in: query
+        name: phone
+        type: string
+      - description: email
+        in: query
+        name: email
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "500":
+          description: error
+          schema:
+            type: string
+      summary: 获取admin用户列表
+      tags:
+      - admin 用户信息
+swagger: "2.0"
