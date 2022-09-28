@@ -5,10 +5,10 @@ import (
 	"github.com/spf13/viper"
 	"reflect"
 	"strconv"
-	"wangStoreServer/common/model"
+	"wangStoreServer/common/models"
 )
 
-func GetConfigEnv() *model.Configs {
+func GetConfigEnv() *models.Configs {
 	viperConfig := viper.New()
 	viperConfig.AddConfigPath("config") //设置读取的文件路径
 	viperConfig.SetConfigName("config") //设置读取的文件名
@@ -18,13 +18,13 @@ func GetConfigEnv() *model.Configs {
 		fmt.Println("读取配置文件异常：", err.Error())
 		return nil
 	}
-	var envs = model.Configs{}
+	var envs = models.Configs{}
 	setEnvValue(&envs, viperConfig)
 	return &envs
 }
 
 // 修改结构体属性值
-func setEnvValue(envObj *model.Configs, viperConfig *viper.Viper) {
+func setEnvValue(envObj *models.Configs, viperConfig *viper.Viper) {
 	envObjT := reflect.TypeOf(envObj)
 	envObjV := reflect.ValueOf(envObj)
 	for i := 0; i < envObjT.Elem().NumField(); i++ {

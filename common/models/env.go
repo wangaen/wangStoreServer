@@ -1,4 +1,4 @@
-package model
+package models
 
 type Configs struct {
 	Application Application `yaml:"application"`
