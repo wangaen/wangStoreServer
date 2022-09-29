@@ -9,13 +9,13 @@ type QueueScheduler struct {
 	WorkerChan  chan chan engine.Request
 }
 
+func (q *QueueScheduler) ConfigWorkerChan() chan engine.Request {
+	return make(chan engine.Request)
+}
+
 func (q *QueueScheduler) Submit(request engine.Request) {
 	q.RequestChan <- request
 }
-
-//func (q *QueueScheduler) ConfigWorkerChan(requests chan engine.Request) {
-//	panic("implement me")
-//}
 
 func (q *QueueScheduler) WorkReady(w chan engine.Request) {
 	q.WorkerChan <- w

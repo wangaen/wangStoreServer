@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-var timer = time.Tick(1 * time.Second)
+var timer = time.Tick(10 * time.Millisecond)
 
 func Fetch(url string) ([]byte, error) {
 
@@ -50,7 +50,8 @@ func FetchProxy(reqUrl string) ([]byte, error) {
 	<-timer
 
 	proxy := func(_ *http.Request) (*url.URL, error) {
-		return url.Parse("http://127.0.0.1:2658")
+		//81.70.124.99 , 49.233.242.15 , 140.143.177.206
+		return url.Parse("http://140.143.177.206:8080")
 	}
 	transport := &http.Transport{Proxy: proxy}
 	client := &http.Client{Transport: transport}

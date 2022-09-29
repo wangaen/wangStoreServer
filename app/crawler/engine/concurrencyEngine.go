@@ -8,7 +8,7 @@ import (
 
 type Scheduler interface {
 	Submit(Request)
-	//ConfigWorkerChan(chan Request)
+	ConfigWorkerChan() chan Request
 	Run()
 	WorkReady(chan Request)
 }
@@ -26,7 +26,7 @@ func (c *ConcurrencyEngine) Run(seeds ...Request) {
 
 	// 创建工人
 	for i := 0; i < c.WorkerCount; i++ {
-		CreateWorker(out, c.Scheduler)
+		CreateWorker(c.Scheduler.ConfigWorkerChan(), out, c.Scheduler)
 	}
 
 	// 种子任务分配调度器
@@ -39,7 +39,7 @@ func (c *ConcurrencyEngine) Run(seeds ...Request) {
 	for {
 		result := <-out
 		for _, item := range result.TagContent {
-			log.Printf("itemCount: %d, %v", itemCount, item)
+			log.Printf("itemCount: %d, %s", itemCount, item)
 			if book, ok := item.(models.Book); ok {
 				book.PrintBookDetails()
 			}
@@ -51,8 +51,7 @@ func (c *ConcurrencyEngine) Run(seeds ...Request) {
 	}
 }
 
-func CreateWorker(out chan ParseRequest, s Scheduler) {
-	in := make(chan Request)
+func CreateWorker(in chan Request, out chan ParseRequest, s Scheduler) {
 	go func() {
 		for {
 			s.WorkReady(in)
@@ -68,7 +67,7 @@ func CreateWorker(out chan ParseRequest, s Scheduler) {
 
 func worker(request Request) (ParseRequest, error) {
 	log.Printf("请求 %s 中...", request.Url)
-	contentByte, err := fetcher.FetchProxy(request.Url)
+	contentByte, err := fetcher.Fetch(request.Url)
 	if err != nil {
 		log.Printf("请求 %s 异常, err: %s \n", request.Url, err.Error())
 		return ParseRequest{}, err
