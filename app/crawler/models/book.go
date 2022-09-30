@@ -1,6 +1,9 @@
 package models
 
-import "fmt"
+import (
+	"fmt"
+	"os"
+)
 
 type Book struct {
 	BookId          int     `json:"bookId" gorm:"primaryKey;autoIncrement;comment:书籍Id"`
@@ -17,4 +20,34 @@ type Book struct {
 func (b Book) PrintBookDetails() {
 	fmt.Printf("书名：%v\n作者:%v\n出版社:%v\n出版时间:%v\n评分:%v\n页码:%v\n定价:%v\n内容简介:%v\n",
 		b.Name, b.Author, b.Press, b.PublicationTime, b.RatingNum, b.PageNum, b.Price, b.Info)
+}
+
+func (b Book) WriteBookToFile() {
+
+	wd, _ := os.Getwd()
+	path := wd + "\\static"
+	err := os.MkdirAll(path, 0660)
+	if err != nil {
+		fmt.Println("创建文件夹失败,", err.Error())
+		return
+	}
+
+	file, err := os.OpenFile(path, os.O_CREATE|os.O_RDWR|os.O_APPEND, 0660)
+	if err != nil {
+		if !os.IsNotExist(err) {
+			file, err = os.Create(path + "\\books.txt")
+			if err != nil {
+				fmt.Println("创建 books.txt 文件失败,", err.Error())
+				return
+			}
+		}
+	}
+	if file != nil {
+		defer file.Close()
+	}
+
+	bookItemStr := fmt.Sprintf("书名：%v\n作者:%v\n出版社:%v\n出版时间:%v\n评分:%v\n页码:%v\n定价:%v\n内容简介:%v\n\n",
+		b.Name, b.Author, b.Press, b.PublicationTime, b.RatingNum, b.PageNum, b.Price, b.Info)
+
+	file.WriteString(bookItemStr)
 }

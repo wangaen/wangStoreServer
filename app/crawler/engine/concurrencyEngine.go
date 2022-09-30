@@ -42,6 +42,7 @@ func (c *ConcurrencyEngine) Run(seeds ...Request) {
 			log.Printf("itemCount: %d, %s", itemCount, item)
 			if book, ok := item.(models.Book); ok {
 				book.PrintBookDetails()
+				book.WriteBookToFile()
 			}
 			itemCount++
 		}

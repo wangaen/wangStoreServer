@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-var timer = time.Tick(10 * time.Millisecond)
+var timer = time.Tick(1000 * time.Millisecond)
 
 func Fetch(url string) ([]byte, error) {
 
