@@ -16,6 +16,7 @@ type Scheduler interface {
 type ConcurrencyEngine struct {
 	Scheduler
 	WorkerCount int // 工人数
+	//ItemChan    chan interface{}
 }
 
 func (c *ConcurrencyEngine) Run(seeds ...Request) {
@@ -39,6 +40,7 @@ func (c *ConcurrencyEngine) Run(seeds ...Request) {
 	for {
 		result := <-out
 		for _, item := range result.TagContent {
+			//go func() { c.ItemChan <- item }()
 			log.Printf("itemCount: %d, %s", itemCount, item)
 			if book, ok := item.(models.Book); ok {
 				book.PrintBookDetails()
@@ -59,7 +61,7 @@ func CreateWorker(in chan Request, out chan ParseRequest, s Scheduler) {
 			request := <-in                // 取出一个请求任务
 			result, err := worker(request) // 工人处理
 			if err != nil {
-				continue
+				break
 			}
 			out <- result // 处理完成写入
 		}
@@ -70,7 +72,7 @@ func worker(request Request) (ParseRequest, error) {
 	log.Printf("请求 %s 中...", request.Url)
 	contentByte, err := fetcher.Fetch(request.Url)
 	if err != nil {
-		log.Printf("请求 %s 异常, err: %s \n", request.Url, err.Error())
+		log.Printf("err: %v \n", err.Error())
 		return ParseRequest{}, err
 	}
 
