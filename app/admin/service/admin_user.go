@@ -37,8 +37,7 @@ func UpdateAdminUserSer(admin *models.AdminUser) error {
 		"UserId",
 		"Username",
 		"Password",
-		"CreateBy",
-		"UpdateBy",
+		"CreatedAt",
 	).Updates(admin)
 	if result.RowsAffected == 0 {
 		return result.Error
