@@ -20,6 +20,7 @@ var proxyPageNum = 1
 var proxyIpList = make([]string, 0)
 
 func Fetch(url string) ([]byte, error) {
+	fmt.Println("333333333333333333")
 
 	<-timer
 

@@ -1,9 +1,9 @@
 package engine
 
 import (
+	"fmt"
 	"log"
 	"wangStoreServer/app/crawler/fetcher"
-	"wangStoreServer/app/crawler/models"
 )
 
 type Scheduler interface {
@@ -20,7 +20,7 @@ type ConcurrencyEngine struct {
 }
 
 func (c *ConcurrencyEngine) Run(seeds ...Request) {
-
+	fmt.Println("111111111111111")
 	out := make(chan ParseRequest)
 
 	c.Scheduler.Run()
@@ -38,14 +38,15 @@ func (c *ConcurrencyEngine) Run(seeds ...Request) {
 	//	处理 out
 	itemCount := 0
 	for {
+		fmt.Println("222222222222222")
 		result := <-out
 		for _, item := range result.TagContent {
 			//go func() { c.ItemChan <- item }()
 			log.Printf("itemCount: %d, %s", itemCount, item)
-			if book, ok := item.(models.Book); ok {
-				book.PrintBookDetails()
-				book.WriteBookToFile()
-			}
+			//if book, ok := item.(models.Book); ok {
+			//	book.PrintBookDetails()
+			//	book.WriteBookToFile()
+			//}
 			itemCount++
 		}
 		for _, request := range result.RequestArray {
@@ -63,6 +64,7 @@ func CreateWorker(in chan Request, out chan ParseRequest, s Scheduler) {
 			if err != nil {
 				break
 			}
+			fmt.Println("44444444444", result)
 			out <- result // 处理完成写入
 		}
 	}()

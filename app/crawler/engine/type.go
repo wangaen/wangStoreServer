@@ -4,8 +4,8 @@ package engine
 // 一个 Request 的 Url 通过 ParseUrlFun 处理，会得到很多个 Request 数组。
 
 type ParseRequest struct {
-	RequestArray []Request
-	TagContent   []interface{}
+	RequestArray []Request     // 该 url 页面中 所有符合的 []Request
+	TagContent   []interface{} // 标签内容
 }
 
 // Request 表示一个请求任务

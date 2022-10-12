@@ -1,6 +1,7 @@
 package parses
 
 import (
+	"fmt"
 	"regexp"
 	"strconv"
 	"wangStoreServer/app/crawler/engine"
@@ -8,10 +9,12 @@ import (
 )
 
 func ParseTag(contentByte []byte) engine.ParseRequest {
-	conReg := regexp.MustCompile(`<a href="([^"]+)" class="tag">([^"]+)</a>`)
+	conReg := regexp.MustCompile(`<a href="(http://www.zhenai.com/zhenghun/\w+)" data-v-\w+>([^"]+)</a>`)
 	byteSlice := conReg.FindAllSubmatch(contentByte, -1)
 	result := engine.ParseRequest{}
+
 	for _, item := range byteSlice {
+		fmt.Println("item: ", item)
 		result.TagContent = append(result.TagContent, item[2])
 		result.RequestArray = append(result.RequestArray, engine.Request{
 			Url:         "https://book.douban.com" + string(item[1]),
