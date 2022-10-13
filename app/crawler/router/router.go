@@ -1,10 +1,10 @@
 package router
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"wangStoreServer/app/crawler/fetcher"
+	"wangStoreServer/app/crawler/engine"
+	"wangStoreServer/app/crawler/parses/zhenaiwang/parseCityList"
 )
 
 func InitCrawlerRouter(e *gin.Engine) {
@@ -18,18 +18,11 @@ func InitCrawlerRouter(e *gin.Engine) {
 		//	Url:         "https://www.zhenai.com/zhenghun",
 		//	ParseUrlFun: parses.ParseTag,
 		//})
-		//file, err := os.OpenFile("/app/crawler/parses/parseCityList/cityList_test_data.html", os.O_RDWR|os.O_TRUNC, 0666)
-		//if err != nil {
-		//	panic(err)
-		//	return
-		//}
-		//defer file.Close()
-		bytes, _ := fetcher.Fetch("https://www.zhenai.com/zhenghun")
-		//write := bufio.NewWriter(file)
-		//write.Write(bytes)
-		//write.Flush()
-		//parseRequest := parses.ParseCityList(bytes)
-		fmt.Println(string(bytes))
+
+		engine.SimpleRun(engine.Request{
+			Url:         "https://www.zhenai.com/zhenghun",
+			ParseUrlFun: parses.ParseCityList,
+		})
 
 		c.JSON(http.StatusOK, gin.H{
 			"code": 200,
