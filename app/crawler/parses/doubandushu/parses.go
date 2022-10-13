@@ -1,11 +1,11 @@
-package parses
+package doubandushu
 
 import (
 	"fmt"
 	"regexp"
 	"strconv"
 	"wangStoreServer/app/crawler/engine"
-	"wangStoreServer/app/crawler/models"
+	models "wangStoreServer/app/crawler/models/doubandushu"
 )
 
 func ParseTag(contentByte []byte) engine.ParseRequest {

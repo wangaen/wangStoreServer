@@ -4,18 +4,21 @@ import (
 	"fmt"
 	"regexp"
 	"wangStoreServer/app/crawler/engine"
+	"wangStoreServer/app/crawler/parses/zhenaiwang/parseUserList"
 )
 
+const cityStr = `<a href="(http://www.zhenai.com/zhenghun/[^>]+)" data-v-\w+>([^<]+)</a>`
+
 func ParseCityList(contentByte []byte) engine.ParseRequest {
-	conReg := regexp.MustCompile(`<a href="(http://www.zhenai.com/zhenghun/\w+)" data-v-1573aa7c="">([^<]+)</a>`)
+	conReg := regexp.MustCompile(cityStr)
 	byteSlice := conReg.FindAllSubmatch(contentByte, -1)
 	result := engine.ParseRequest{}
-	for _, item := range byteSlice {
-		fmt.Println("item: ", string(item[2]))
+	for index, item := range byteSlice {
+		fmt.Printf("序号：%d, 城市名: %s, url: %s \n", index+1, item[2], item[1])
 		result.TagContent = append(result.TagContent, string(item[2]))
 		result.RequestArray = append(result.RequestArray, engine.Request{
 			Url:         string(item[1]),
-			ParseUrlFun: engine.NilParseUrlFun,
+			ParseUrlFun: parses.ParseUserList,
 		})
 	}
 	return result

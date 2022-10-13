@@ -1,9 +1,9 @@
 package engine
 
 import (
+	"fmt"
 	"log"
 	"wangStoreServer/app/crawler/fetcher"
-	"wangStoreServer/app/crawler/models"
 )
 
 // SimpleRun 单机版爬虫
@@ -14,14 +14,18 @@ func SimpleRun(seeds ...Request) {
 	for _, seed := range seeds {
 		requests = append(requests, seed)
 	}
-
+	fmt.Println("fsdfsdf", requests)
 	//	逐个发起请求
 	for len(requests) > 0 {
 		request := requests[0]
 		// 截取掉
 		requests = requests[1:]
 
-		log.Printf("请求URL: %s\n", request.Url)
+		log.Printf(""+
+			"\n\n***************************************\n"+
+			"请求URL: %s\n***************************************\n\n",
+			request.Url)
+
 		bytes, err := fetcher.Fetch(request.Url)
 		if err != nil {
 			log.Printf("请求 %s 异常, err: %s \n", request.Url, err.Error())
@@ -31,13 +35,5 @@ func SimpleRun(seeds ...Request) {
 
 		// 收集
 		requests = append(requests, parseResult.RequestArray...)
-
-		for _, item := range parseResult.TagContent {
-			log.Printf("item: %s\n", item)
-			if book, ok := item.(models.Book); ok {
-				book.PrintBookDetails()
-			}
-
-		}
 	}
 }
