@@ -7,44 +7,42 @@ import (
 	models "wangStoreServer/app/crawler/models/zhenaiwang"
 )
 
-// 内心独白
-var signature = regexp.MustCompile(`<div data-v-\w+="" class="m-content-box m-des"><span data-v-\w+="">([^<]*)</span>`)
+var multiple = regexp.MustCompile(`<div class="m-btn purple" data-v-\w+>([^<]*)</div>`)
+var signature = regexp.MustCompile(`<div class="m-content-box m-des" data-v-\w+><span[\d\D]*?>([^<]+)</span></div>`)
 
-// 户籍 年龄 学历 婚况 身高 月收入
-var basicInfo = regexp.MustCompile(`<div data-v-\w+="" class="des f-cl">([^<]+)\\| ([^<]+) \\| ([^<]+) \\| ([^<]+) \\| ([^<]+) \\| ([^<]+)`)
-var pressTag = regexp.MustCompile(`<span class="pl">出版社:</span>[\d\D]*?<a.*?>([^<]+)</a>`)
-var publicationTimeTag = regexp.MustCompile(`<span class="pl">出版年:</span> ([^<]+)<br/>`)
-var pageNumTag = regexp.MustCompile(`<span class="pl">页数:</span> ([^<]+)<br/>`)
-var priceTag = regexp.MustCompile(`<span class="pl">定价:</span> ([^<]+)<br/>`)
-var ratingNumTag = regexp.MustCompile(`<strong class="ll rating_num " property="v:average"> ([^<]+) </strong>`)
-var infoTag = regexp.MustCompile(`<div class="intro">[\d\D]*?(<p>([^"]+)</p>)</div>`)
+var ageG = regexp.MustCompile(`<div class="m-btn" data-v-\w+>(\d{2}-\d{2}岁)</div>`)
+var heightG = regexp.MustCompile(`<div class="m-btn" data-v-\w+>(\d{3}-\d{3}cm)</div>`)
+var workAddressG = regexp.MustCompile(`<div class="m-btn" data-v-\w+>工作地:([^<]+)</div>`)
+var salaryG = regexp.MustCompile(`<div class="m-btn" data-v-\w+>月薪:([^<]+)</div>`)
+var xueLiG = regexp.MustCompile(`<div class="m-btn" data-v-\w+>月薪:[^<]+</div>[\d\D]*?<div class="m-btn" data-v-\w+>([^<]+)</div>`)
 
 func ParseUserInfo(contentByte []byte, name, sex string) engine.ParseRequest {
 	user := models.User{}
 	user.Name = name
 	user.Sex = sex
-	user.HuJi, user.Age, user.XueLi, user.Status, user.Height, user.Salary = ParseSixInfoFun(contentByte, basicInfo)
 
-	//user.Author = ParseInfoFun(contentByte, authorTag)
-	//user.Press = ParseInfoFun(contentByte, pressTag)
-	//user.PublicationTime = ParseInfoFun(contentByte, publicationTimeTag)
-	//user.Price = ParseInfoFun(contentByte, priceTag)
-	//user.Info = ParseInfoFun(contentByte, infoTag)
-	//
-	//pageNum, err := strconv.Atoi(ParseInfoFun(contentByte, pageNumTag))
-	//if err != nil {
-	//	user.PageNum = 0
-	//}
-	//user.PageNum = pageNum
-	//
-	//ratingNum, err := strconv.ParseFloat(ParseInfoFun(contentByte, ratingNumTag), 64)
-	//if err != nil {
-	//	user.RatingNum = 0.00
-	//}
-	//user.RatingNum = ratingNum
-	fmt.Println("userinfo:", user)
+	if arr := multiple.FindAllSubmatch(contentByte, -1); len(arr) == 9 {
+		user.Status = string(arr[0][1])
+		user.Age = string(arr[1][1])
+		user.XingZuo = string(arr[2][1])
+		user.Height = string(arr[3][1])
+		user.Weight = string(arr[4][1])
+		user.WorkAddress = string(arr[5][1])
+		user.Salary = string(arr[6][1])
+		user.Work = string(arr[7][1])
+		user.XueLi = string(arr[8][1])
+	}
+
+	user.Signature = ParseInfoFun(contentByte, signature)
+	user.GirlCondition.Age = ParseInfoFun(contentByte, ageG)
+	user.GirlCondition.Height = ParseInfoFun(contentByte, heightG)
+	user.GirlCondition.WorkAddress = ParseInfoFun(contentByte, workAddressG)
+	user.GirlCondition.Salary = ParseInfoFun(contentByte, salaryG)
+	user.GirlCondition.XueLi = ParseInfoFun(contentByte, xueLiG)
+
 	result := engine.ParseRequest{}
 	result.TagContent = []interface{}{user}
+	fmt.Printf("userinfo: %#v \n", result.TagContent)
 	return result
 }
 
@@ -55,26 +53,4 @@ func ParseInfoFun(contentByte []byte, reg *regexp.Regexp) string {
 	} else {
 		return ""
 	}
-}
-func ParseSixInfoFun(contentByte []byte, reg *regexp.Regexp) (huJi, age, xueLi, status, height, salary string) {
-	result := reg.FindSubmatch(contentByte)
-	if len(result) == 7 {
-		fmt.Println("len(result)::: ", string(result[1]),
-			string(result[2]),
-			string(result[3]))
-		huJi = string(result[1])
-		age = string(result[2])
-		xueLi = string(result[3])
-		status = string(result[4])
-		height = string(result[5])
-		salary = string(result[6])
-		return
-	}
-	huJi = ""
-	age = ""
-	xueLi = ""
-	status = ""
-	height = ""
-	salary = ""
-	return
 }

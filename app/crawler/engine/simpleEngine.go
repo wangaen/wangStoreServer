@@ -14,17 +14,16 @@ func SimpleRun(seeds ...Request) {
 	for _, seed := range seeds {
 		requests = append(requests, seed)
 	}
-	fmt.Println("fsdfsdf", requests)
+
 	//	逐个发起请求
 	for len(requests) > 0 {
 		request := requests[0]
 		// 截取掉
 		requests = requests[1:]
 
-		log.Printf(""+
-			"\n\n***************************************\n"+
-			"请求URL: %s\n***************************************\n\n",
-			request.Url)
+		fmt.Println()
+		log.Printf("【请求URL】: %s\n", request.Url)
+		fmt.Println()
 
 		bytes, err := fetcher.Fetch(request.Url)
 		if err != nil {

@@ -6,14 +6,16 @@ import (
 )
 
 func TestParseCityList(t *testing.T) {
-	content, _ := ioutil.ReadFile("./cityList_test_data.html")
-	parseRequest := ParseCityList(content)
-	if len(parseRequest.TagContent) != 12 || len(parseRequest.RequestArray) != 12 {
+	content, _ := ioutil.ReadFile("./userList_test_data.html")
+	parseRequest := ParseUserList(content)
+
+	if len(parseRequest.TagContent) != 20 || len(parseRequest.RequestArray) != 20 {
 		t.Errorf(
-			"len(parseRequest.TagContent) 应等于 12 ，而不是 %d,len(parseRequest.RequestArray) 应等于 12 ，而不是 %d",
+			"len(parseRequest.TagContent) 应等于 20 ，而不是 %d,len(parseRequest.RequestArray) 应等于 20 ，而不是 %d",
 			len(parseRequest.TagContent),
 			len(parseRequest.RequestArray),
 		)
+		return
 	}
 
 	testLists := []struct {
@@ -21,10 +23,10 @@ func TestParseCityList(t *testing.T) {
 		url  string
 		i    int
 	}{
-		{"阿坝", "http://www.zhenai.com/zhenghun/aba", 0},
-		{"阿勒泰", "http://www.zhenai.com/zhenghun/aletai", 3},
-		{"安康", "http://www.zhenai.com/zhenghun/ankang", 6},
-		{"中国澳门", "http://www.zhenai.com/zhenghun/aomen", 11},
+		{"认真刷牙", "http://album.zhenai.com/u/1659136263", 0},
+		{"柠檬草的味道", "http://album.zhenai.com/u/1372922681", 4},
+		{"风景", "http://album.zhenai.com/u/1439719003", 9},
+		{"一起去看世界", "http://album.zhenai.com/u/1854964179", 19},
 	}
 
 	for _, item := range testLists {
