@@ -1,7 +1,7 @@
 package engine
 
 import (
-	"log"
+	models2 "wangStoreServer/app/crawler/models/zhenaiwang"
 )
 
 // ConcurrencyEngine 并发版引擎
@@ -13,19 +13,24 @@ type ConcurrencyEngine struct {
 
 // Scheduler 调度器
 type Scheduler interface {
+	ReadyNotifier
 	Submit(Request)
-	ConfigWorkerChan(chan Request)
-	//Run()
-	//WorkReady(chan Request)
+	WorkerChan() chan Request
+	Run()
+}
+
+type ReadyNotifier interface {
+	WorkReady(chan Request)
 }
 
 func (c *ConcurrencyEngine) Run(seeds ...Request) {
 
-	in := make(chan Request)
 	out := make(chan ParseRequest)
-	c.Scheduler.ConfigWorkerChan(in)
+
+	c.Scheduler.Run()
+
 	for i := 0; i < c.WorkerCount; i++ {
-		createWorker(in, out)
+		createWorker(c.Scheduler.WorkerChan(), out, c.Scheduler)
 	}
 
 	for _, seed := range seeds {
@@ -36,7 +41,9 @@ func (c *ConcurrencyEngine) Run(seeds ...Request) {
 	for {
 		result := <-out
 		for _, item := range result.TagContent {
-			log.Println("遍历到，item : ", item)
+			if user, ok := item.(models2.User); ok {
+				user.PrintUserDetails()
+			}
 		}
 		for _, request := range result.RequestArray {
 			c.Scheduler.Submit(request)
@@ -44,9 +51,10 @@ func (c *ConcurrencyEngine) Run(seeds ...Request) {
 	}
 }
 
-func createWorker(in chan Request, out chan ParseRequest) {
+func createWorker(in chan Request, out chan ParseRequest, ready ReadyNotifier) {
 	go func() {
 		for {
+			ready.WorkReady(in)
 			request := <-in
 			result, err := worker(request)
 			if err != nil {

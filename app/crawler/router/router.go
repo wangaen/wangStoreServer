@@ -11,7 +11,7 @@ import (
 func InitCrawlerRouter(e *gin.Engine) {
 	e.GET("/crawler", func(c *gin.Context) {
 		eng := engine.ConcurrencyEngine{
-			Scheduler:   &scheduler.SimpleScheduler{},
+			Scheduler:   &scheduler.QueueScheduler{},
 			WorkerCount: 100,
 		}
 

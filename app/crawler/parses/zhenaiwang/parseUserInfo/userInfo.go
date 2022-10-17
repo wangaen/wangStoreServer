@@ -1,7 +1,6 @@
 package parses
 
 import (
-	"fmt"
 	"regexp"
 	"wangStoreServer/app/crawler/engine"
 	models "wangStoreServer/app/crawler/models/zhenaiwang"
@@ -42,7 +41,6 @@ func ParseUserInfo(contentByte []byte, name, sex string) engine.ParseRequest {
 
 	result := engine.ParseRequest{}
 	result.TagContent = []interface{}{user}
-	fmt.Printf("userinfo: %#v \n", result.TagContent)
 	return result
 }
 

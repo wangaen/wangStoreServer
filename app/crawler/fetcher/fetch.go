@@ -21,7 +21,7 @@ var proxyPageNum = 1
 var proxyIpList = make([]string, 0)
 
 func Fetch(url string) ([]byte, error) {
-	//<-timer
+	<-timer
 
 	// 创建客户端
 	client := &http.Client{}
@@ -149,7 +149,7 @@ func SetReqHeader(req *http.Request) {
 	req.Header.Add("Connection", "keep-alive")
 	req.Header.Add("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
 
-	cookie := "sid=db4a88e0-1bad-4b15-bf30-a4c307ac6b82; ec=hsFN522b-1665538533383-febf6adbf1d8b831287112; FSSBBIl1UgzbN7NO=5eO_EdfaQyBkpwiGXBppMTpc_Sv6U6owBRo3o1VShLmlQ.k3MhZcEr8MQUUFJHD9e_2a1KLNMsu8xEybtPQ5VgG; Hm_lvt_2c8ad67df9e787ad29dbd54ee608f5d2=1665538541,1665625603,1665714370,1665973259; _exid=ikRWno8sBBkqrgHmZJrnwWdi3DlZU23HABAllmnezIZw7UPzsKrraDBX3nibJ2S%2BZommqHZp3%2BUU7g0QWU82qA%3D%3D; Hm_lpvt_2c8ad67df9e787ad29dbd54ee608f5d2=1665975738; _efmdata=kjt6D%2BlbgRhhMRLDKptabCtZ3hUrVUSaH%2BSIddhEcA00Rq71p%2BFa62XmiOTxG2EiJ1iShlNY9ivyZKu2iIJdWwjeozUUoX2pghqzWNrlYlQ%3D; FSSBBIl1UgzbN7NP=530umXCJWSM9qqqDkyxQPnq6b5g1aZZa67dXddwEZMXx.Ekx3VXAvsA.rviNalukCoNiISC7i8g82JR1sgexNIn3P0HURyLcHZvMjs10DYKolgyT_e_9wYlkHOywYwx3ELhmHeBV.l8rRDM4zdouK_PvPsmHHYY.SiZpSmHXxaxlwZfU31sDaVM4dbEVByLwnx6eQZEyzNOMCWTLdclZU8lB2aw1BlBrPYNXPF1ix.ze21t.FqxpJK2TXggsO33TJQwXT882GJzZaO1OwFWWJ48PDHg72Gr3dY8A49r8B7AVvl6dTOx8cJaF5ht4y1rf5W"
+	cookie := "sid=bfdb05a5-fddd-493b-85f9-dc7b751bd501; ec=1dqCtIn4-1665499767555-30b63fdfe30f2-1151718565; FSSBBIl1UgzbN7NO=5PbrijbZU5lApIngcTg25y3xrBMLAi9.UwBmj6_vtSIg2WizFO5kgCL7L1isMzOHebvAxcwcLBJ.fJnp_y0k.lG; Hm_lvt_2c8ad67df9e787ad29dbd54ee608f5d2=1665499776,1665988906; _exid=VOA5KfSeAdtp6uTvFkNtQS89MbdodzRmSdAKPAK5FTaVpaE8s%2FcV%2FNCQr2wyEX%2BgWddPp4VM%2BxMDs2klRWofsg%3D%3D; _efmdata=pnkeWY%2FG3QzoBMcDCLXyyuiERNrv6%2FimX6nRD5AkiqPl7dTgZN0CW4aLceBgGletBx6Fqu7%2BKEm7nxwj6vRviIKtK2NmyZ%2FKKYxT2iJdfwU%3D; hcbm_tk=MjZvkSuwEc8n8wier81SwXU2gDEG1CJkYkjoxeSJNKGwFYt5Q/0G1D2jppfYwUpEhZMrcTz9VPvYD501KxifuJOTple1iJPuGBR5GCRYAOU0ONB9K4RWbUIb2j1ACnP+5Z56fCPDvODsJhwttW19fWrt1QpILepNGhfsNmuBWDIIzHmUXf4nr+HDknmSdG6jBoASbvmDjoYMnoQlb/QBCglYRDY7V5c2LDhNpAowuzgbM9OnmRmomVi3g6uyZga0KQEx+JiXZ7YZYVrr1FS3VfaQ42LF7h2B91i+tntXKcJ/GyhJd6C9ya/+R7aNtCrBSMDz9AF/jK/pTGNhJrzW4GPAo21GS3J0TFBBSwiqz2DF46ajwKR3yNbQgb+tnLvxGDV0xsDC6Ja+Pzdg4//hVvJlzi//CIC+tEMjiEDYPeE=_RERXV4AmIa4VjY7e; Hm_lpvt_2c8ad67df9e787ad29dbd54ee608f5d2=1665994652; FSSBBIl1UgzbN7NP=5300HNKJJky7qqqDkypLJ.q68y3bh5x8LbNUx8YDV5Lo5F8Lbp6YuVX2.epO0wimL.lqRhxhZb.hMgs23pxr0SPomlm5hBlf0s.dArzHVN2MsamqCV8MIFFvldCAD6DiaqZhkVxHNH29IXGfp35_py67Es0ARQ1XSZpqYQMnp38eMgmuC4Efe7Yr56Xu_1gk8VnI4kG79T8dVXdombl6Kk3nPuTWlchcbogUmN5Uy5o0gO0orRA4lbUeePGnDrtbVl"
 	req.Header.Add("cookie", cookie)
 }
 

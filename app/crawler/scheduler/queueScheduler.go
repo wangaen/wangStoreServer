@@ -5,25 +5,25 @@ import "wangStoreServer/app/crawler/engine"
 // 队列调度器
 
 type QueueScheduler struct {
-	RequestChan chan engine.Request
-	WorkerChan  chan chan engine.Request
+	requestChan chan engine.Request
+	workerChan  chan chan engine.Request
 }
 
-func (q *QueueScheduler) ConfigWorkerChan() chan engine.Request {
+func (q *QueueScheduler) WorkerChan() chan engine.Request {
 	return make(chan engine.Request)
 }
 
 func (q *QueueScheduler) Submit(request engine.Request) {
-	q.RequestChan <- request
+	q.requestChan <- request
 }
 
 func (q *QueueScheduler) WorkReady(w chan engine.Request) {
-	q.WorkerChan <- w
+	q.workerChan <- w
 }
 
 func (q *QueueScheduler) Run() {
-	q.WorkerChan = make(chan chan engine.Request)
-	q.RequestChan = make(chan engine.Request)
+	q.workerChan = make(chan chan engine.Request)
+	q.requestChan = make(chan engine.Request)
 	go func() {
 		var requestQ []engine.Request
 		var workQ []chan engine.Request
@@ -37,9 +37,9 @@ func (q *QueueScheduler) Run() {
 			}
 
 			select {
-			case r := <-q.RequestChan:
+			case r := <-q.requestChan:
 				requestQ = append(requestQ, r)
-			case w := <-q.WorkerChan:
+			case w := <-q.workerChan:
 				workQ = append(workQ, w)
 			case activeWork <- activeRequest:
 				workQ = workQ[1:]

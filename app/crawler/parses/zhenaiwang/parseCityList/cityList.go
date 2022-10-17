@@ -13,7 +13,7 @@ func ParseCityList(contentByte []byte) engine.ParseRequest {
 	conReg := regexp.MustCompile(cityStr)
 	byteSlice := conReg.FindAllSubmatch(contentByte, -1)
 	result := engine.ParseRequest{}
-	total := 100
+	total := 50
 	for index, item := range byteSlice {
 		if total == 0 {
 			break
