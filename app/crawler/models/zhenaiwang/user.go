@@ -16,7 +16,6 @@ type User struct {
 	Status      string `json:"status" gorm:"size:16,comment:婚况"`
 	XingZuo     string `json:"xingZuo" gorm:"size:16,comment:星座"`
 	XueLi       string `json:"xueLi" gorm:"size:64,comment:学历"`
-	HuJi        string `json:"huJi" gorm:"size:64,comment:户籍"`
 	Work        string `json:"work" gorm:"size:64,comment:职业"`
 	WorkAddress string `json:"workAddress" gorm:"size:64,comment:工作地"`
 	Signature   string `json:"signature" gorm:"size:1024,comment:内心独白"`
@@ -43,7 +42,6 @@ func (u User) PrintUserDetails() {
 	fmt.Printf("\t婚况: %v\n", u.Status)
 	fmt.Printf("\t星座: %v\n", u.XingZuo)
 	fmt.Printf("\t学历: %v\n", u.XueLi)
-	fmt.Printf("\t户籍: %v\n", u.HuJi)
 	fmt.Printf("\t职业: %v\n", u.Work)
 	fmt.Printf("\t工作地: %v\n", u.WorkAddress)
 	fmt.Printf("\t内心独白: %v\n", u.Signature)

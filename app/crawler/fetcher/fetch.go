@@ -11,6 +11,7 @@ import (
 	"net/url"
 	"regexp"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -26,7 +27,8 @@ func Fetch(url string) ([]byte, error) {
 	client := &http.Client{}
 
 	//建立请求
-	req, err := http.NewRequest("GET", url, nil)
+	newUrl := strings.ReplaceAll(url, "http://", "https://")
+	req, err := http.NewRequest("GET", newUrl, nil)
 	if err != nil {
 		return nil, errors.New("建立请求异常，err: " + err.Error())
 	}
@@ -42,7 +44,7 @@ func Fetch(url string) ([]byte, error) {
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return nil, errors.New("返回错误状态码" + strconv.Itoa(resp.StatusCode))
+		return nil, errors.New("返回错误状态码: " + strconv.Itoa(resp.StatusCode))
 	}
 
 	bodyByteArr := ReaderRespBody(resp)
@@ -142,10 +144,13 @@ func SetReqHeader(req *http.Request) {
 		"Mozilla/5.0 (X11; U; Linux x86_64; zh-CN; rv:1.9.2.10) Gecko/20100922 Ubuntu/10.10 (maverick) Firefox/3.6.10"}
 	rand.Seed(time.Now().UnixNano())
 	n := rand.Intn(34)
-	req.Header.Set("User-Agent", userAgent[n])
-	req.Header.Set("Accept-Language", "zh-CN,zh;q=0.9,en-GB;q=0.8,en-US;q=0.7,en;q=0.6")
-	req.Header.Set("Connection", "keep-alive")
-	req.Header.Set("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
+	req.Header.Add("User-Agent", userAgent[n])
+	req.Header.Add("Accept-Language", "zh-CN,zh;q=0.9,en-GB;q=0.8,en-US;q=0.7,en;q=0.6")
+	req.Header.Add("Connection", "keep-alive")
+	req.Header.Add("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
+
+	cookie := "sid=db4a88e0-1bad-4b15-bf30-a4c307ac6b82; ec=hsFN522b-1665538533383-febf6adbf1d8b831287112; FSSBBIl1UgzbN7NO=5eO_EdfaQyBkpwiGXBppMTpc_Sv6U6owBRo3o1VShLmlQ.k3MhZcEr8MQUUFJHD9e_2a1KLNMsu8xEybtPQ5VgG; Hm_lvt_2c8ad67df9e787ad29dbd54ee608f5d2=1665538541,1665625603,1665714370,1665973259; _exid=ikRWno8sBBkqrgHmZJrnwWdi3DlZU23HABAllmnezIZw7UPzsKrraDBX3nibJ2S%2BZommqHZp3%2BUU7g0QWU82qA%3D%3D; Hm_lpvt_2c8ad67df9e787ad29dbd54ee608f5d2=1665975738; _efmdata=kjt6D%2BlbgRhhMRLDKptabCtZ3hUrVUSaH%2BSIddhEcA00Rq71p%2BFa62XmiOTxG2EiJ1iShlNY9ivyZKu2iIJdWwjeozUUoX2pghqzWNrlYlQ%3D; FSSBBIl1UgzbN7NP=530umXCJWSM9qqqDkyxQPnq6b5g1aZZa67dXddwEZMXx.Ekx3VXAvsA.rviNalukCoNiISC7i8g82JR1sgexNIn3P0HURyLcHZvMjs10DYKolgyT_e_9wYlkHOywYwx3ELhmHeBV.l8rRDM4zdouK_PvPsmHHYY.SiZpSmHXxaxlwZfU31sDaVM4dbEVByLwnx6eQZEyzNOMCWTLdclZU8lB2aw1BlBrPYNXPF1ix.ze21t.FqxpJK2TXggsO33TJQwXT882GJzZaO1OwFWWJ48PDHg72Gr3dY8A49r8B7AVvl6dTOx8cJaF5ht4y1rf5W"
+	req.Header.Add("cookie", cookie)
 }
 
 // GetProxyIPList 获取代理IP
