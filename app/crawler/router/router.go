@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"wangStoreServer/app/crawler/engine"
 	parses2 "wangStoreServer/app/crawler/parses/zhenaiwang/parseCityList"
+	"wangStoreServer/app/crawler/persist"
 	"wangStoreServer/app/crawler/scheduler"
 )
 
@@ -13,6 +14,7 @@ func InitCrawlerRouter(e *gin.Engine) {
 		eng := engine.ConcurrencyEngine{
 			Scheduler:   &scheduler.QueueScheduler{},
 			WorkerCount: 100,
+			ItemChan:    persist.ItemSave(),
 		}
 
 		eng.Run(engine.Request{

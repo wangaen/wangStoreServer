@@ -2,6 +2,7 @@ package parses
 
 import (
 	"regexp"
+	"strings"
 	"wangStoreServer/app/crawler/engine"
 	models "wangStoreServer/app/crawler/models/zhenaiwang"
 )
@@ -26,8 +27,8 @@ func ParseUserInfo(contentByte []byte, name, sex string) engine.ParseRequest {
 		user.XingZuo = string(arr[2][1])
 		user.Height = string(arr[3][1])
 		user.Weight = string(arr[4][1])
-		user.WorkAddress = string(arr[5][1])
-		user.Salary = string(arr[6][1])
+		user.WorkAddress = strings.Trim(string(arr[5][1]), "工作地:")
+		user.Salary = strings.Trim(string(arr[6][1]), "月收入:")
 		user.Work = string(arr[7][1])
 		user.XueLi = string(arr[8][1])
 	}

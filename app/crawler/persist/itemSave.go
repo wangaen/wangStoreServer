@@ -6,11 +6,11 @@ import (
 	"log"
 )
 
-func ItemSave() (chan interface{}, error) {
-	client, err := elastic.NewClient(elastic.SetSniff(false))
-	if err != nil {
-		return nil, err
-	}
+func ItemSave() chan interface{} {
+	//client, err := elastic.NewClient(elastic.SetSniff(false))
+	//if err != nil {
+	//	return nil, err
+	//}
 	out := make(chan interface{})
 
 	go func() {
@@ -19,12 +19,12 @@ func ItemSave() (chan interface{}, error) {
 		for {
 			item := <-out
 			log.Printf("保存第 %v 个 （%v） ", itemCount, item)
-			save(client, item)
+			//save(client, item)
 			itemCount++
 		}
 	}()
 
-	return out, nil
+	return out
 }
 
 func save(client *elastic.Client, item interface{}) error {

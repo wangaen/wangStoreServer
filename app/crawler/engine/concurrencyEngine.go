@@ -1,14 +1,12 @@
 package engine
 
-import (
-	models2 "wangStoreServer/app/crawler/models/zhenaiwang"
-)
+import models2 "wangStoreServer/app/crawler/models/zhenaiwang"
 
 // ConcurrencyEngine 并发版引擎
 type ConcurrencyEngine struct {
 	Scheduler
 	WorkerCount int // 工人数
-	//ItemChan    chan interface{}
+	ItemChan    chan interface{}
 }
 
 // Scheduler 调度器
@@ -42,7 +40,9 @@ func (c *ConcurrencyEngine) Run(seeds ...Request) {
 		result := <-out
 		for _, item := range result.TagContent {
 			if user, ok := item.(models2.User); ok {
-				user.PrintUserDetails()
+				go func() {
+					c.ItemChan <- user
+				}()
 			}
 		}
 		for _, request := range result.RequestArray {
