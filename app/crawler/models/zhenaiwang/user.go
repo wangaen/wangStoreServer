@@ -1,25 +1,26 @@
 package models
 
 import (
+	"encoding/json"
 	"fmt"
 )
 
 // User 用户基本信息
 type User struct {
-	ID          string `json:"id" gorm:"primaryKey;comment:id"`
-	Name        string `json:"name" gorm:"size:128,comment:用户名"`
-	Sex         string `json:"sex" gorm:"size:16,comment:性别"`
-	Age         string `json:"age" gorm:"size:16,comment:年龄"`
-	Height      string `json:"height" gorm:"size:16,comment:身高"`
-	Weight      string `json:"weight" gorm:"size:16,comment:体重"`
-	Salary      string `json:"salary" gorm:"size:64,comment:月收入"`
-	Status      string `json:"status" gorm:"size:16,comment:婚况"`
-	XingZuo     string `json:"xingZuo" gorm:"size:16,comment:星座"`
-	XueLi       string `json:"xueLi" gorm:"size:64,comment:学历"`
-	Work        string `json:"work" gorm:"size:64,comment:职业"`
-	WorkAddress string `json:"workAddress" gorm:"size:64,comment:工作地"`
-	Signature   string `json:"signature" gorm:"size:1024,comment:内心独白"`
-	GirlCondition
+	ID            string `json:"id" gorm:"primaryKey;comment:id"`
+	Name          string `json:"name" gorm:"size:128,comment:用户名"`
+	Sex           string `json:"sex" gorm:"size:16,comment:性别"`
+	Age           string `json:"age" gorm:"size:16,comment:年龄"`
+	Height        string `json:"height" gorm:"size:16,comment:身高"`
+	Weight        string `json:"weight" gorm:"size:16,comment:体重"`
+	Salary        string `json:"salary" gorm:"size:64,comment:月收入"`
+	Status        string `json:"status" gorm:"size:16,comment:婚况"`
+	XingZuo       string `json:"xingZuo" gorm:"size:16,comment:星座"`
+	XueLi         string `json:"xueLi" gorm:"size:64,comment:学历"`
+	Work          string `json:"work" gorm:"size:64,comment:职业"`
+	WorkAddress   string `json:"workAddress" gorm:"size:64,comment:工作地"`
+	Signature     string `json:"signature" gorm:"size:1024,comment:内心独白"`
+	GirlCondition GirlCondition
 }
 
 // GirlCondition 择偶条件
@@ -82,4 +83,24 @@ func (u User) WriteUserToFile() {
 	//	b.Name, b.Author, b.Press, b.PublicationTime, b.RatingNum, b.PageNum, b.Price, b.Info)
 	//
 	//file.WriteString(bookItemStr)
+}
+
+func FormatUserObj(obj interface{}) (User, error) {
+	var user User
+	str, err := json.Marshal(obj)
+	if err != nil {
+		return user, err
+	}
+	err = json.Unmarshal(str, &user)
+	return user, err
+}
+
+func FormatGirlConditionObj(obj interface{}) (GirlCondition, error) {
+	var girlCondition GirlCondition
+	str, err := json.Marshal(obj)
+	if err != nil {
+		return girlCondition, err
+	}
+	err = json.Unmarshal(str, &girlCondition)
+	return girlCondition, err
 }

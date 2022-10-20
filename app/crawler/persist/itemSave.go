@@ -2,24 +2,26 @@ package persist
 
 import (
 	"context"
+	"errors"
 	"github.com/olivere/elastic"
 	"log"
+	"wangStoreServer/app/crawler/engine"
 )
 
-func ItemSave() chan interface{} {
-	//client, err := elastic.NewClient(elastic.SetSniff(false))
-	//if err != nil {
-	//	return nil, err
-	//}
-	out := make(chan interface{})
+func ItemSave() chan engine.Item {
+	out := make(chan engine.Item)
 
 	go func() {
 		itemCount := 0
 
 		for {
 			item := <-out
-			log.Printf("保存第 %v 个 （%v） ", itemCount, item)
-			//save(client, item)
+			err := save(item)
+			if err != nil {
+				log.Printf("保存item出现异常：保存 （%v）,err: （%v）\n", item, err.Error())
+			} else {
+				log.Printf("保存第 %v 个 （%v）\n", itemCount, item)
+			}
 			itemCount++
 		}
 	}()
@@ -27,21 +29,24 @@ func ItemSave() chan interface{} {
 	return out
 }
 
-func save(client *elastic.Client, item interface{}) error {
-	//if item.Type == "" {
-	//	return errors.New("item 类型为空")
-	//}
+func save(item engine.Item) error {
 
-	indexService := client.Index().Index("dating_profile").Type("").BodyJson(item)
-
-	//if item.Id != "" {
-	//	indexService.Id(item.Id)
-	//}
-
-	_, err := indexService.Do(context.Background())
-
+	client, err := elastic.NewClient(elastic.SetSniff(false))
 	if err != nil {
-		panic(err)
+		return err
+	}
+
+	if item.Type == "" {
+		return errors.New("elastic type is null")
+	}
+
+	indexService := client.Index().Index("dating_profile").Type(item.Type)
+	if item.Id != "" {
+		indexService.Id(item.Id)
+	}
+	_, err = indexService.BodyJson(item).Do(context.Background())
+	if err != nil {
+		return err
 	}
 	return nil
 }

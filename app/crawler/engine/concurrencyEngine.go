@@ -39,7 +39,7 @@ func (c *ConcurrencyEngine) Run(seeds ...Request) {
 	for {
 		result := <-out
 		for _, item := range result.TagContent {
-			if user, ok := item.(models2.User); ok {
+			if user, ok := item.Payload.(models2.User); ok {
 				go func() {
 					c.ItemChan <- user
 				}()

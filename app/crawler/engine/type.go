@@ -4,8 +4,8 @@ package engine
 // 一个 Request 的 Url 通过 ParseUrlFun 处理，会得到很多个 Request 数组。
 
 type ParseRequest struct {
-	RequestArray []Request     // 该 url 页面中 所有符合的 []Request
-	TagContent   []interface{} // 标签内容
+	RequestArray []Request // 该 url 页面中 所有符合的 []Request
+	TagContent   []Item    // 标签内容
 }
 
 // Request 表示一个请求任务
@@ -14,12 +14,9 @@ type Request struct {
 	ParseUrlFun func([]byte) ParseRequest // 每一个 Url 都有一个自己独有的处理函数
 }
 
-func NilParseUrlFun([]byte) ParseRequest {
-	result := ParseRequest{}
-	result.RequestArray = append(result.RequestArray, Request{
-		Url:         "https://www.baidu.com",
-		ParseUrlFun: nil,
-	})
-	result.TagContent = append(result.TagContent, "百度")
-	return result
+type Item struct {
+	Url     string
+	Id      string
+	Type    string
+	Payload interface{}
 }
